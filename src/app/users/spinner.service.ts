@@ -5,16 +5,37 @@ import { BehaviorSubject } from 'rxjs';
   providedIn: 'root'
 })
 export class SpinnerService {
-  public isLoading = new BehaviorSubject<boolean>(false);
+
+  //#region Class properties
+
+  public isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  //#endregion
 
   constructor() {
   }
 
-  show() {
-    this.isLoading.next(true);
+  //#region Functionality
+
+  /**
+   * 
+   * This method show loading spinner
+   * 
+   * @returns void
+   */
+  public show(): void {
+    this.isLoading$.next(true);
   }
 
-  hide() {
-    this.isLoading.next(false);
+  /**
+   * 
+   * This method hide loading spinner
+   * 
+   * @returns void
+   */
+  public hide(): void {
+    this.isLoading$.next(false);
   }
+
+  //#endregion
 }

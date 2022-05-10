@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { filter, first, forkJoin } from 'rxjs';
+import { filter, first } from 'rxjs';
 import { IUser } from './user';
 import { UserService } from './user.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,7 +18,16 @@ import { DeleteAllComponent } from './delete-all.component';
 })
 export class UserListComponent implements OnInit, OnChanges {
 
+  //#region Angular stuff (@ViewChild, @Output)
+
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+
   @Input() listOfUsers: string = '';
+
+  //#endregion
+
+  //#region Class properties
 
   public displayedColumns: string[] = ['check', 'id', 'name', 'email', 'created', 'action'];
   public dataSource: MatTableDataSource<IUser> = new MatTableDataSource();
@@ -34,12 +43,22 @@ export class UserListComponent implements OnInit, OnChanges {
   private selectedUsers: IUser[] = [];
   public numOfChecked = 0;
 
+  //#endregion
+
   constructor(
     private userService: UserService,
     private dialog: MatDialog
   ) { }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  //#region Life cycle hooks
+
+  /**
+   * 
+   * This method handle the changes 
+   * 
+   * @returns void
+   */
+  public ngOnChanges(): void {
     if (this.lastSearch !== this.listOfUsers) {
       if (this.listOfUsers === '') {
         this.listOfUsers = '';
@@ -50,14 +69,27 @@ export class UserListComponent implements OnInit, OnChanges {
     }
   }
 
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
-
+  /**
+   * 
+   * This method on init load users and set pagination.
+   * 
+   * @returns void
+   */
   ngOnInit(): void {
     this.getUsers();
     this.dataSource.paginator = this.paginator;
   }
 
+  //#endregion
+
+  //#region Functionality
+
+  /**
+   * 
+   * Get users from service, set checked, dataSource and pagination properties
+   * 
+   * @returns void
+   */
   private getUsers(): void {
     this.userService.getUsers(this.pageSize, this.pageIndex, this.listOfUsers, this.orderBy, this.direction)
       .pipe(first())
@@ -71,14 +103,31 @@ export class UserListComponent implements OnInit, OnChanges {
       });
   }
 
-  handlePageEvent(event: PageEvent) {
+  /**
+   * 
+   * Method change page size or navigates to another page when clicked
+   * 
+   * 
+   * @param event Change event object that is emitted when the user selects a different page size or navigates to another page.
+   * 
+   * @returns void
+   */
+  public handlePageEvent(event: PageEvent): void {
     this.length = event.length;
     this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
     this.getUsers();
   }
 
-  getUserForUpdate(id: number) {
+  /**
+   * 
+   * Get user from service for update
+   * 
+   * @param id number- user id for update
+   * 
+   * @returns void
+   */
+  public getUserForUpdate(id: number): void {
     this.userService.getUser(id)
       .pipe(first())
       .subscribe((user) => {
@@ -86,7 +135,17 @@ export class UserListComponent implements OnInit, OnChanges {
       });
   }
 
-  openUpdateDialog(userId: number, userName: string, userEmail: string): void {
+  /**
+   * 
+   * Open dialog for user update, refresh page after close
+   * 
+   * @param userId number - user id for update
+   * @param userName string - user name for update
+   * @param userEmail string - user email for update
+   * 
+   * @returns void 
+   */
+  public openUpdateDialog(userId: number, userName: string, userEmail: string): void {
     const dialogRef = this.dialog.open(UpdateUserComponent, { data: { id: userId, name: userName, email: userEmail } });
 
     dialogRef.afterClosed()
@@ -96,7 +155,17 @@ export class UserListComponent implements OnInit, OnChanges {
       });
   }
 
-  openDeleteDialog(userId: number, userName: string, userEmail: string) {
+  /**
+   * 
+   * Open dialog for delete, refresh page after close
+   * 
+   * @param userId number - user id for delete
+   * @param userName string - user name for delete
+   * @param userEmail string - user email for delete
+   * 
+   * @returns void
+   */
+  public openDeleteDialog(userId: number, userName: string, userEmail: string): void {
     const dialogRef = this.dialog.open(DeleteUserComponent, { data: { id: userId, name: userName, email: userEmail } });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -108,8 +177,15 @@ export class UserListComponent implements OnInit, OnChanges {
     });
   }
 
-  openAddNewDialog() {
+  /**
+   * 
+   * Open dialog to add new user, after close refresh page
+   * 
+   * @returns void
+   */
+  public openAddNewDialog(): void {
     const dialogRef = this.dialog.open(NewUserComponent, { data: { name: '', email: '' } });
+
     dialogRef.afterClosed()
       .pipe(filter(x => !!x))
       .subscribe(() => {
@@ -117,7 +193,15 @@ export class UserListComponent implements OnInit, OnChanges {
       });
   }
 
-  sortData(sort: Sort) {
+  /**
+   * 
+   * Sort users on header click
+   * 
+   * @param sort Sort - active (true, false) and direction (asc, desc)
+   * 
+   * @returns void
+   */
+  public sortData(sort: Sort): void {
     this.direction = sort.direction;
     this.orderBy = sort.active;
     if (!sort.active || sort.direction === '') {
@@ -127,16 +211,13 @@ export class UserListComponent implements OnInit, OnChanges {
     this.getUsers();
   }
 
-  // deleteAllChecked() {
-  //   this.disableDeleteAllButton = true;
-  //   forkJoin(this.selectedUsers.map(x => this.userService.deleteUser(x)))
-  //     .subscribe(() => {
-  //       this.selectedUsers = [];
-  //       this.getUsers();
-  //     });
-  // }
-
-  openDeleteAllDialog() {
+  /**
+   * 
+   * Open dialog for delete all checked users, after close refresh page
+   * 
+   * @returns void
+   */
+  public openDeleteAllDialog(): void {
     this.disableDeleteAllButton = true;
     const dialogRef = this.dialog.open(DeleteAllComponent, { data: { selected: this.selectedUsers } });
 
@@ -150,7 +231,16 @@ export class UserListComponent implements OnInit, OnChanges {
       });
   }
 
-  public getUserFromCheckbox(item: IUser, event: any) {
+  /**
+   * 
+   * Make array of checked users and set disable property for Delete All button
+   * 
+   * @param item IUser - checked user
+   * @param event checked (true, false)
+   * 
+   * @returns void
+   */
+  public getUserFromCheckbox(item: IUser, event: any): void {
     const index = this.selectedUsers.findIndex(newItem => newItem.id === item.id);
     if (event.checked) {
       if (index === -1) {
@@ -172,4 +262,6 @@ export class UserListComponent implements OnInit, OnChanges {
 
     this.numOfChecked = this.selectedUsers.length;
   }
+
+  //#endregion
 }

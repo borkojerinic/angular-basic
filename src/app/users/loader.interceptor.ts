@@ -8,9 +8,28 @@ import { SpinnerService } from "./spinner.service";
 })
 
 export class LoaderInterceptor implements HttpInterceptor {
-    public counter = 0;
+
+    //#region Class properties
+
+    public counter: number = 0;
+
+    //#endregion
+
     constructor(public spinnerService: SpinnerService) { }
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+    //#region Utilities
+
+    /**
+     * 
+     * Identifies and handles a given HTTP request. 
+     * 
+     * @param req The outgoing request object to handle.
+     * @param next The next interceptor in the chain, or the backend if no interceptors remain in the chain.
+     * 
+     * @returns An observable of the event stream. 
+     */
+
+    public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         this.spinnerService.show();
         this.counter++;
         return next.handle(req)
@@ -23,4 +42,6 @@ export class LoaderInterceptor implements HttpInterceptor {
                 })
             );
     }
+
+    //#endregion
 }

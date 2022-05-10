@@ -9,14 +9,33 @@ import { IUser, SingleUser } from './user';
   providedIn: 'root'
 })
 export class UserService {
-  userUrl = 'http://dev.qposoft.com:4082/api/users';
-  queryParams = `?pageSize=10&page=0`;
+
+  //#region Class properties
+
+  public userUrl: string = 'http://dev.qposoft.com:4082/api/users';
+  public queryParams: string = `?pageSize=10&page=0`;
+
+  //#endregion
 
   constructor(
     private http: HttpClient
   ) { }
 
-  getUsers(pageSize: number, pageIndex: number, search: string, orderBy: string, direction: string): Observable<UsersResponse> {
+  //#region Functionality
+
+  /**
+   * 
+   * Get users from server
+   * 
+   * @param pageSize 
+   * @param pageIndex 
+   * @param search 
+   * @param orderBy 
+   * @param direction
+   *  
+   * @returns Observable<UsersResponse> - array of users(IUser[]), Links and Meta 
+   */
+  public getUsers(pageSize: number, pageIndex: number, search: string, orderBy: string, direction: string): Observable<UsersResponse> {
     this.queryParams = `?pageSize=${pageSize}&page=${pageIndex + 1}&search=${search}&order=${orderBy}&direction=${direction}`;
 
     return this.http
@@ -26,7 +45,15 @@ export class UserService {
       );
   }
 
-  filter(search: string) {
+  /**
+   * 
+   * Get filtered users from server
+   * 
+   * @param search string - input from FilterUserComponent
+   * 
+   * @returns Observable<UsersResponse> - array of users(IUser[]), Links and Meta
+   */
+  public filter(search: string): Observable<UsersResponse> {
     return this.http
       .get<UsersResponse>(this.userUrl + `${this.queryParams}&search=${search}`)
       .pipe(
@@ -34,7 +61,15 @@ export class UserService {
       );
   }
 
-  getUser(id: number): Observable<SingleUser> {
+  /**
+   * 
+   * Get one user from server 
+   * 
+   * @param id number - user id
+   * 
+   * @returns Observable<SingleUser> - single user(IUser)
+   */
+  public getUser(id: number): Observable<SingleUser> {
     return this.http
       .get<SingleUser>(this.userUrl + `/${id}`)
       .pipe(
@@ -42,7 +77,14 @@ export class UserService {
       );
   }
 
-  updateUser(user: IUser) {
+  /**
+   * 
+   * Update user on server
+   * 
+   * @param user IUser - user for update
+   * @returns Observable<IUser>
+   */
+  public updateUser(user: IUser): Observable<IUser> {
     return this.http
       .put<IUser>(this.userUrl + `/${user.id}`, user)
       .pipe(
@@ -50,17 +92,46 @@ export class UserService {
       );
   }
 
-  deleteUser(user: IUser): Observable<any> {
+  /**
+   * 
+   * Delete user from server
+   * 
+   * @param user IUser - user for deletion
+   * 
+   * @returns Observable<unknown> - response from server
+   */
+  public deleteUser(user: IUser): Observable<unknown> {
     return this.http.delete(this.userUrl + `/${user.id}`);
   }
 
-  public addUser(user: IUser) {
+  /**
+   * 
+   * Add new user on server
+   * 
+   * @param user IUser - new user
+   *  
+   * @returns Observable<unknown> - response from server
+   */
+  public addUser(user: IUser): Observable<unknown> {
     return this.http
       .post(this.userUrl, user)
       .pipe(
         catchError(this.handleError)
       );
   }
+
+  //#endregion
+
+  //#region Utilities
+
+  /**
+   * 
+   * Throw error if response represent an error or failure
+   * 
+   * @param err HttpErrorResponse - A response that represents an error or failure
+   * 
+   * @returns 
+   */
 
   private handleError(err: HttpErrorResponse) {
     let errorMessage = '';
@@ -74,4 +145,6 @@ export class UserService {
       return errorMessage;
     });
   }
+
+  //#endregion
 }

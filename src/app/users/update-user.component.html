@@ -21,7 +21,7 @@
   </div>
   <div mat-dialog-actions>
     <button mat-button (click)="onNoClick()">Close</button>
-    <button mat-button [disabled]="updateButtonDisabled || !updateForm.valid" (click)="onSave()" type="submit">
+    <button mat-button [disabled]="!updateForm.valid" (click)="onSave()" type="submit">
       Update
     </button>
   </div>

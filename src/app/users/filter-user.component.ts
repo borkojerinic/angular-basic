@@ -1,7 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { IUser } from './user';
-import { UserService } from './user.service';
 
 @Component({
   selector: 'app-filter-user',
@@ -9,23 +8,65 @@ import { UserService } from './user.service';
   styleUrls: ['./filter-user.component.scss']
 })
 export class FilterUserComponent implements OnInit {
+
+  //#region Angular stuff (@Output)
+
+  /**
+   * 
+   * @param search string - Emit string to parent component
+   * 
+   */
+
   @Output() search: EventEmitter<string> = new EventEmitter<string>();
+
+  //#endregion
+
+  //#region Class properties
+
   public searchData: string = '';
-  public dataSource: MatTableDataSource<IUser> = new MatTableDataSource();
-  public pageSize = 10;
-  public pageIndex = 0;
 
-  constructor(private service: UserService) { }
+  //#endregion
 
-  ngOnInit(): void {
+  constructor() { }
+
+  //#region Life cycle hooks
+
+  /**
+   * 
+   * On init of this component, it's necessary to init current date information.
+   * 
+   * @returns void
+   */
+  public ngOnInit(): void {
+    console.log("");
   }
 
-  filterUsers() {
+  //#endregion
+
+  //#region UI response
+
+  /**
+   * 
+   * This method emit string from input to parent component
+   * 
+   * @returns void
+   */
+
+  public filterUsers(): void {
     this.search.emit(this.searchData);
   }
 
-  clearSearch() {
+  /**
+   * 
+   * This method clear input on user click and emit string to parent component
+   * 
+   * @returns void
+   */
+
+  public clearSearch(): void {
     this.searchData = '';
     this.search.emit(this.searchData);
   }
+
+  //#endregion
 }

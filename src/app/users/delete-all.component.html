@@ -2,8 +2,5 @@
 <div mat-dialog-content *ngFor="let user of data.selected">{{ user.name }}</div>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Close</button>
-  <button mat-button [disabled]="disableDeleteAllButton" (click)="onDelete()">
-    Delete
-  </button>
-  <!-- <mat-spinner *ngIf="showSpinner"></mat-spinner> -->
+  <button mat-button (click)="onDelete()">Delete</button>
 </div>

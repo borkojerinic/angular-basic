@@ -43,7 +43,6 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
     <div class="pagination-delete-wrapper">
-      <!-- <button mat-raised-button [disabled]="disableDeleteAllButton" (click)="deleteAllChecked()" class="deleteAllButton"> -->
       <button mat-raised-button [disabled]="disableDeleteAllButton" (click)="openDeleteAllDialog()" class="deleteAllButton">
         Delete all ({{numOfChecked}})
       </button>

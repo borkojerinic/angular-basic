@@ -8,14 +8,30 @@ import { SpinnerService } from './spinner.service';
   styleUrls: ['./loader.component.scss']
 })
 export class LoaderComponent implements OnInit {
-  color = 'warn';
-  isLoading: BehaviorSubject<boolean> = this.spinnerService.isLoading;
-  
-  constructor(private spinnerService: SpinnerService) {
 
+  //#region Class properties
+
+  public color: string = 'warn';
+  public isLoading$: BehaviorSubject<boolean> = this.spinnerService.isLoading$;
+
+  //#endregion
+
+  constructor(private spinnerService: SpinnerService) {
   }
+
+  //#region Life cycle hooks
+
+  /**
+   * 
+   * On init of this component, it's necessary to init current date information.
+   * 
+   * @returns void
+   */
 
   ngOnInit(): void {
+    this.color = 'warn';
   }
+
+  //#endregion
 
 }

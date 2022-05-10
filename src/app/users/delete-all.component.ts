@@ -12,26 +12,44 @@ import { UserService } from './user.service';
 })
 export class DeleteAllComponent implements OnInit {
 
-  public disableDeleteAllButton = false;
-  public showSpinner = false;
-
   constructor(
-    public dialogRef: MatDialogRef<DeleteAllComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    public dialogRef: MatDialogRef<DeleteAllComponent>,
     private service: UserService,
     private snackBar: MatSnackBar
   ) { }
 
-  ngOnInit(): void {
+  //#region Life cycle hooks
+
+  /**
+   * On init of this component, it's necessary to init current date information.
+   * 
+   * @returns void
+   */
+
+  public ngOnInit(): void {
+    console.log("");
   }
 
-  onNoClick() {
+  //#endregion
+
+  //#region  UI Responses
+
+  /**
+   * This method closes opened dialog.
+   * 
+   * @returns void
+   */
+  public onNoClick(): void {
     this.dialogRef.close(false);
   }
 
-  onDelete() {
-    this.showSpinner = true;
-    this.disableDeleteAllButton = true;
+  /**
+   * Deletes multiple users that are selected for deletion.
+   * 
+   * @returns void
+   */
+  public onDelete(): void {
     forkJoin(this.data.selected.map((x: IUser) => this.service.deleteUser(x)))
       .subscribe(() => {
         this.dialogRef.close(true);
@@ -39,7 +57,22 @@ export class DeleteAllComponent implements OnInit {
       });
   }
 
-  openSnackBar(message: string, action: string) {
+  //#endregion
+
+  //#region Utilities
+
+  /**
+   * This method will display the message given in the snackbar on the bottom of the screen.
+   * 
+   * @param message string - Message to be displayed inside the snack bar.
+   * 
+   * @param action string - Close button text.
+   * 
+   * @returns void
+   */
+  public openSnackBar(message: string, action: string): void {
     this.snackBar.open(message, action);
   }
+
+  //#endregion
 }

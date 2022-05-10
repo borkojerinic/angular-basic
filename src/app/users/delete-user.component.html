@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>Delete</h1>
+<div mat-dialog-content>Delete {{ data.name }}</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Close</button>
+  <button mat-button [disabled]="deleteButtonDisabled" (click)="onDelete()">
+    Delete
+  </button>
+  <!-- <mat-spinner *ngIf="showSpinner"></mat-spinner> -->
+</div>

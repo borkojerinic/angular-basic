@@ -1,7 +1,7 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { finalize, Observable } from "rxjs";
-import { SpinnerService } from "./spinner.service";
+import { SpinnerService } from "@app-services";
 
 @Injectable({
     providedIn: 'root'
@@ -26,10 +26,10 @@ export class LoaderInterceptor implements HttpInterceptor {
      * @param req The outgoing request object to handle.
      * @param next The next interceptor in the chain, or the backend if no interceptors remain in the chain.
      * 
-     * @returns An observable of the event stream. 
+     * @returns Observable<HttpEvent<unknown>> - An observable of the event stream. 
      */
 
-    public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    public intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         this.spinnerService.show();
         this.counter++;
         return next.handle(req)

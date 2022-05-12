@@ -1,15 +1,15 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { filter, first } from 'rxjs';
-import { IUser } from './user';
-import { UserService } from './user.service';
 import { MatDialog } from '@angular/material/dialog';
-import { UpdateUserComponent } from './update-user.component';
-import { DeleteUserComponent } from './delete-user.component';
 import { Sort } from '@angular/material/sort';
-import { NewUserComponent } from './new-user.component';
-import { DeleteAllComponent } from './delete-all.component';
+import { IUser } from '@app-models';
+import { UserService } from '@app-services';
+import { UpdateUserComponent } from '../update-user/update-user.component';
+import { DeleteUserComponent } from '../delete-user/delete-user.component';
+import { NewUserComponent } from '../new-user/new-user.component';
+import { DeleteAllComponent } from '../delete-all/delete-all.component';
 
 @Component({
   selector: 'app-user-list',
@@ -170,8 +170,11 @@ export class UserListComponent implements OnInit, OnChanges {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
+        console.log(this.selectedUsers)
         const index = this.selectedUsers.findIndex(newItem => newItem.id === userId);
-        this.selectedUsers.splice(index, 1);
+        if (index !== -1) {
+          this.selectedUsers.splice(index, 1);
+        }
         this.getUsers();
       }
     });

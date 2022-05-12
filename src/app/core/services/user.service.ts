@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { catchError, Observable, throwError } from "rxjs";
-import { UsersResponse } from './users-response';
-import { IUser, SingleUser } from './user';
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { IUser, SingleUser, UsersResponse } from '@app-models';
 
 @Injectable({
   providedIn: 'root'
@@ -38,11 +37,7 @@ export class UserService {
   public getUsers(pageSize: number, pageIndex: number, search: string, orderBy: string, direction: string): Observable<UsersResponse> {
     this.queryParams = `?pageSize=${pageSize}&page=${pageIndex + 1}&search=${search}&order=${orderBy}&direction=${direction}`;
 
-    return this.http
-      .get<UsersResponse>(this.userUrl + this.queryParams)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http.get<UsersResponse>(this.userUrl + this.queryParams);
   }
 
   /**
@@ -54,11 +49,7 @@ export class UserService {
    * @returns Observable<UsersResponse> - array of users(IUser[]), Links and Meta
    */
   public filter(search: string): Observable<UsersResponse> {
-    return this.http
-      .get<UsersResponse>(this.userUrl + `${this.queryParams}&search=${search}`)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http.get<UsersResponse>(this.userUrl + `${this.queryParams}&search=${search}`);
   }
 
   /**
@@ -70,11 +61,7 @@ export class UserService {
    * @returns Observable<SingleUser> - single user(IUser)
    */
   public getUser(id: number): Observable<SingleUser> {
-    return this.http
-      .get<SingleUser>(this.userUrl + `/${id}`)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http.get<SingleUser>(this.userUrl + `/${id}`);
   }
 
   /**
@@ -85,11 +72,7 @@ export class UserService {
    * @returns Observable<IUser>
    */
   public updateUser(user: IUser): Observable<IUser> {
-    return this.http
-      .put<IUser>(this.userUrl + `/${user.id}`, user)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http.put<IUser>(this.userUrl + `/${user.id}`, user);
   }
 
   /**
@@ -113,37 +96,7 @@ export class UserService {
    * @returns Observable<unknown> - response from server
    */
   public addUser(user: IUser): Observable<unknown> {
-    return this.http
-      .post(this.userUrl, user)
-      .pipe(
-        catchError(this.handleError)
-      );
-  }
-
-  //#endregion
-
-  //#region Utilities
-
-  /**
-   * 
-   * Throw error if response represent an error or failure
-   * 
-   * @param err HttpErrorResponse - A response that represents an error or failure
-   * 
-   * @returns 
-   */
-
-  private handleError(err: HttpErrorResponse) {
-    let errorMessage = '';
-    if (err.error instanceof ErrorEvent) {
-      errorMessage = `An error occurred: ${err.error.message}`;
-    } else {
-      errorMessage = `Server returned code ${err.status}, error message is ${err.message}`;
-    }
-    console.error(errorMessage);
-    return throwError(() => {
-      return errorMessage;
-    });
+    return this.http.post(this.userUrl, user);
   }
 
   //#endregion

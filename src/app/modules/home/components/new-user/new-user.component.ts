@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { IUser } from './user';
-import { UserService } from './user.service';
+import { UserService, SnackBarService } from '@app-services';
+import { IUser } from '@app-models';
 
 @Component({
   selector: 'app-new-user',
@@ -24,7 +23,7 @@ export class NewUserComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<NewUserComponent>,
     private service: UserService,
-    private snackBar: MatSnackBar
+    private snackBarService: SnackBarService
   ) { }
 
   //#region Life cycle hooks
@@ -37,7 +36,7 @@ export class NewUserComponent implements OnInit {
    */
 
   public ngOnInit(): void {
-    console.log("");
+
   }
 
   //#endregion
@@ -56,7 +55,7 @@ export class NewUserComponent implements OnInit {
 
   /**
    * 
-   * Add new user
+   * Add new user and show snack bar message.
    * 
    * @returns void
    */
@@ -64,29 +63,8 @@ export class NewUserComponent implements OnInit {
     this.service.addUser(this.formAddNewUser.value as IUser)
       .subscribe((response) => {
         this.dialogRef.close(true);
-        this.openSnackBar('Successfully added', 'Ok');
-      },
-        (error) => {
-          this.openSnackBar('The email has already been taken.', 'Ok');
-        }
-      );
-  }
-
-  //#endregion
-
-  //#region Utilities
-
-  /**
-   * 
-   * This method will display the message given in the snackbar on the bottom of the screen.
-   * 
-   * @param message string - Message to be displayed inside the snack bar.
-   * @param action string - Close button text.
-   * 
-   * @returns void
-   */
-  public openSnackBar(message: string, action: string): void {
-    this.snackBar.open(message, action);
+        this.snackBarService.showSnackBarMessage('Successfully added', 'Ok');
+      });
   }
 
   //#endregion

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { SpinnerService } from './spinner.service';
+import { SpinnerService } from '@app-services';
 
 @Component({
   selector: 'app-loader',
@@ -29,7 +29,7 @@ export class LoaderComponent implements OnInit {
    */
 
   ngOnInit(): void {
-    this.color = 'warn';
+
   }
 
   //#endregion

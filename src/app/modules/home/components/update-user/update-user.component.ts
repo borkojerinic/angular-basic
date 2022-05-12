@@ -1,9 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { IUser } from './user';
-import { UserService } from './user.service';
+import { UserService, SnackBarService } from '@app-services';
+import { IUser } from '@app-models';
 
 @Component({
   selector: 'app-update-user',
@@ -22,7 +21,7 @@ export class UpdateUserComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: IUser,
     public dialogRef: MatDialogRef<UpdateUserComponent>,
     private service: UserService,
-    private snackBar: MatSnackBar
+    private snackBarService: SnackBarService
   ) {
     this.updateForm = new FormGroup({
       id: new FormControl(this.data.id),
@@ -40,7 +39,7 @@ export class UpdateUserComponent implements OnInit {
    * @returns void
    */
   public ngOnInit(): void {
-    console.log("");
+
   }
 
   //#endregion
@@ -59,7 +58,7 @@ export class UpdateUserComponent implements OnInit {
 
   /**
    * 
-   * Update user
+   * Update user and show snack bar message.
    * 
    * @returns void
    */
@@ -67,31 +66,9 @@ export class UpdateUserComponent implements OnInit {
     this.service.updateUser(this.updateForm.value as IUser)
       .subscribe(() => {
         this.dialogRef.close(true);
-        this.openSnackBar('Updated', 'Ok');
-      },
-        (error) => {
-          this.openSnackBar('The email has already been taken.', 'Ok');
-        }
-      );
+        this.snackBarService.showSnackBarMessage('Updated', 'Ok');
+      });
   }
 
   //#endregion
-
-  //#region Utilities
-
-  /**
-   * 
-   * This method will display the message given in the snackbar on the bottom of the screen.
-   * 
-   * @param message string - Message to be displayed inside the snack bar.
-   * @param action string - Close button text.
-   * 
-   * @returns void
-   */
-  public openSnackBar(message: string, action: string): void {
-    this.snackBar.open(message, action);
-  }
-
-  //#endregion
-
 }

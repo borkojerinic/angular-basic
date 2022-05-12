@@ -1,6 +1,4 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { IUser } from './user';
 
 @Component({
   selector: 'app-filter-user',
@@ -38,7 +36,7 @@ export class FilterUserComponent implements OnInit {
    * @returns void
    */
   public ngOnInit(): void {
-    console.log("");
+    
   }
 
   //#endregion

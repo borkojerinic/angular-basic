@@ -1,8 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { IUser } from './user';
-import { UserService } from './user.service';
+import { SnackBarService, UserService } from '@app-services';
+import { IUser } from '@app-models';
 
 @Component({
   selector: 'app-delete-user',
@@ -15,7 +14,7 @@ export class DeleteUserComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: IUser,
     public dialogRef: MatDialogRef<DeleteUserComponent>,
     private service: UserService,
-    private snackBar: MatSnackBar
+    private snackBarService: SnackBarService
   ) { }
 
   //#region Life cycle hooks
@@ -29,7 +28,7 @@ export class DeleteUserComponent implements OnInit {
    */
 
   public ngOnInit(): void {
-    console.log("");
+
   }
 
   //#endregion
@@ -46,7 +45,7 @@ export class DeleteUserComponent implements OnInit {
   }
 
   /**
-   * Delete user on button click
+   * Delete user on button click and show snack bar message.
    * 
    * @returns void
    */
@@ -54,25 +53,8 @@ export class DeleteUserComponent implements OnInit {
     this.service.deleteUser(this.data)
       .subscribe(() => {
         this.dialogRef.close(true);
-        this.openSnackBar('Deleted', 'Ok');
+        this.snackBarService.showSnackBarMessage('Deleted', 'Ok');
       });
-  }
-
-  //#endregion
-
-  //#region Utilities
-
-  /**
-   * This method will display the message given in the snackbar on the bottom of the screen.
-   * 
-   * @param message string - Message to be displayed inside the snack bar. 
-   * @param action string - Close button text.
-   * 
-   * @returns void
-   */
-
-  public openSnackBar(message: string, action: string): void {
-    this.snackBar.open(message, action);
   }
 
   //#endregion

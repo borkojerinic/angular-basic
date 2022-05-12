@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { IUser, SingleUser } from '../user';
+import { SingleUser } from '@app-models';
 
 @Component({
   selector: 'app-index-users',
@@ -35,7 +35,7 @@ export class IndexUsersComponent implements OnInit {
    */
 
   ngOnInit(): void {
-    console.log("");
+
   }
 
   //#endregion

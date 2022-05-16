@@ -1,0 +1,49 @@
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="loginForm">
+      <h2>Log In</h2>
+      <mat-error *ngIf="!loginForm">
+        The username and password were not recognized
+      </mat-error>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Email"
+          formControlName="userEmail"
+          name="userEmail"
+          required
+          autocomplete="off"
+        />
+        <!-- <mat-error> Please provide a valid email address </mat-error> -->
+        <mat-error *ngIf="loginForm.get('userEmail')?.hasError('required')">
+          {{ "Email Required" }}
+        </mat-error>
+        <!-- <mat-error *ngIf="loginForm.get('userEmail')?.hasError('email')">
+          {{ "The email must be a valid email address" }}
+        </mat-error> -->
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          type="password"
+          placeholder="Password"
+          formControlName="password"
+          name="password"
+          required
+          autocomplete="off"
+        />
+        <!-- <mat-error> Please provide a valid password </mat-error> -->
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+          {{ "Password Required" }}
+        </mat-error>
+      </mat-form-field>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onClickSubmit(loginForm.value)"
+      >
+        Login
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>

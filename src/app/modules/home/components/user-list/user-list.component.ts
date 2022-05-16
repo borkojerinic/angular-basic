@@ -5,11 +5,12 @@ import { filter, first } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material/sort';
 import { IUser } from '@app-models';
-import { UserService } from '@app-services';
+import { AuthService, UserService } from '@app-services';
 import { UpdateUserComponent } from '../update-user/update-user.component';
 import { DeleteUserComponent } from '../delete-user/delete-user.component';
 import { NewUserComponent } from '../new-user/new-user.component';
 import { DeleteAllComponent } from '../delete-all/delete-all.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
@@ -47,7 +48,9 @@ export class UserListComponent implements OnInit, OnChanges {
 
   constructor(
     private userService: UserService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   //#region Life cycle hooks
@@ -170,7 +173,6 @@ export class UserListComponent implements OnInit, OnChanges {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        console.log(this.selectedUsers)
         const index = this.selectedUsers.findIndex(newItem => newItem.id === userId);
         if (index !== -1) {
           this.selectedUsers.splice(index, 1);
@@ -267,4 +269,9 @@ export class UserListComponent implements OnInit, OnChanges {
   }
 
   //#endregion
+
+  public onLogout() {
+    this.authService.logout();
+    this.router.navigate(['login']);
+  }
 }

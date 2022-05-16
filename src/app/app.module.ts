@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ErrorCatchingInterceptor, LoaderInterceptor } from '@app-interceptors';
 import { SpinnerService } from '@app-services';
 import { LoaderComponent } from '@app-components';
 import { HomeModule } from './modules/home/home.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [
@@ -19,12 +20,13 @@ import { HomeModule } from './modules/home/home.module';
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
-    HomeModule
+    HomeModule,
+    AuthModule
   ],
   providers: [
     SpinnerService,
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorCatchingInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorCatchingInterceptor, multi: true },
   ],
   bootstrap: [AppComponent]
 })

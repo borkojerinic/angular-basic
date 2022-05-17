@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MaterialModule } from 'src/app/shared/modules/material/material.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { MaterialModule } from 'src/app/shared/modules/material/material.module'
     ReactiveFormsModule,
     FormsModule,
     AuthRoutingModule,
-    MaterialModule
+    MaterialModule,
+    TranslateModule
   ]
 })
 export class AuthModule { }

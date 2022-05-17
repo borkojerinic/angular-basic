@@ -1,49 +1,48 @@
 <mat-card>
   <mat-card-content>
     <form [formGroup]="loginForm">
-      <h2>Log In</h2>
-      <mat-error *ngIf="!loginForm">
-        The username and password were not recognized
-      </mat-error>
+      <h2>{{'Auth.LogIn' | translate}}</h2>
       <mat-form-field>
         <input
           matInput
-          placeholder="Email"
+          placeholder="{{'Auth.PlaceholderEmail' | translate}}"
           formControlName="userEmail"
           name="userEmail"
           required
           autocomplete="off"
         />
-        <!-- <mat-error> Please provide a valid email address </mat-error> -->
         <mat-error *ngIf="loginForm.get('userEmail')?.hasError('required')">
-          {{ "Email Required" }}
+          {{ 'Auth.EmailRequired' | translate }}
         </mat-error>
-        <!-- <mat-error *ngIf="loginForm.get('userEmail')?.hasError('email')">
-          {{ "The email must be a valid email address" }}
-        </mat-error> -->
       </mat-form-field>
       <mat-form-field>
         <input
           matInput
           type="password"
-          placeholder="Password"
+          placeholder="{{'Auth.PlaceholderPass' | translate}}"
           formControlName="password"
           name="password"
           required
           autocomplete="off"
         />
-        <!-- <mat-error> Please provide a valid password </mat-error> -->
         <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
-          {{ "Password Required" }}
+          {{ 'Auth.PasswordRequired' | translate }}
         </mat-error>
       </mat-form-field>
-      <button
-        mat-raised-button
-        color="primary"
-        (click)="onClickSubmit(loginForm.value)"
-      >
-        Login
-      </button>
+      <div class="login-wrapper">
+        <mat-checkbox
+          formControlName="check"
+          (change)="onRememberMeClick()"
+        ></mat-checkbox>
+
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="onClickSubmit(loginForm.value)"
+        >
+          {{'Auth.LogInButton' | translate}}
+        </button>
+      </div>
     </form>
   </mat-card-content>
 </mat-card>

@@ -10,6 +10,8 @@ import {
   IndexUsersComponent
 } from '@app-home';
 import { MaterialModule } from 'src/app/shared/modules/material/material.module';
+import { TranslateModule } from '@ngx-translate/core';
+import { CustomDatePipe } from 'src/app/core/pipes/custom-date.pipe';
 
 @NgModule({
   exports: [
@@ -23,12 +25,13 @@ import { MaterialModule } from 'src/app/shared/modules/material/material.module'
     NewUserComponent,
     UpdateUserComponent,
     UserListComponent,
-    IndexUsersComponent
+    IndexUsersComponent,
+    CustomDatePipe
   ],
   imports: [
     HomeRoutingModule,
-    MaterialModule
-
+    MaterialModule,
+    TranslateModule
   ]
 })
 export class HomeModule { }

@@ -10,13 +10,13 @@ export class AuthService {
   //#region Class properties
 
   public isLogged: boolean = false;
+  public rememberMe: boolean = false;
 
   //#endregion
 
-  constructor(private localStorage: LocalStorageService) { }
+  constructor(private storageService: LocalStorageService) { }
 
   //#region Class functionality
-
 
   /**
    * 
@@ -27,9 +27,12 @@ export class AuthService {
    * 
    * @returns  Using observables to pass values
    */
-  public login(email: string, password: string): Observable<boolean> {
+  public login(email: string, password: string, check: boolean): Observable<boolean> {
+    this.rememberMe = check;
     this.isLogged = email === 'admin' && password === 'admin';
-    this.localStorage.setItem('isUserLoggedIn', this.isLogged ? 'true' : 'false');
+
+    this.storageService.useLocalStorage(check);
+    this.storageService.setItem('isUserLoggedIn', this.isLogged ? 'true' : 'false');
 
     return of(this.isLogged).pipe(
       delay(1000),
@@ -48,7 +51,7 @@ export class AuthService {
 
   public logout(): void {
     this.isLogged = false;
-    this.localStorage.removeItem('isUserLoggedIn');
+    this.storageService.removeItem('isUserLoggedIn');
   }
 
   //#endregion

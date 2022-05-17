@@ -1,5 +1,5 @@
 <mat-form-field class="example-full-width" appearance="fill">
-  <mat-label>Search user</mat-label>
+  <mat-label>{{'Home.SearchUser' | translate}}</mat-label>
   <div class="input-wrapper">
     <input matInput [(ngModel)]="searchData" (keyup)="filterUsers()" autocomplete="off" />
     <button matSuffix mat-icon-button *ngIf="searchData" (click)="clearSearch()">

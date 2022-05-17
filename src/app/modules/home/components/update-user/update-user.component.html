@@ -1,28 +1,26 @@
-<h1 mat-dialog-title>Update</h1>
+<h1 mat-dialog-title>{{'Home.UpdateDialogTitle' | translate}}</h1>
 <form [formGroup]="updateForm">
   <div mat-dialog-content>
     <mat-form-field class="example-full-width" appearance="fill">
-      <mat-label>Name</mat-label>
+      <mat-label>{{'Home.UpdateNameLabel' | translate}}</mat-label>
       <input matInput placeholder="User Name" formControlName="name" autocomplete="off" />
       <mat-error *ngIf="updateForm.get('name')?.hasError('required')">
-        {{ "Name Required" }}
+        {{ 'Home.UpdateNameRequired' | translate }}
       </mat-error>
     </mat-form-field>
     <mat-form-field class="example-full-width" appearance="fill">
-      <mat-label>Email</mat-label>
+      <mat-label>{{'Home.UpdateEmailLabel' | translate}}</mat-label>
       <input matInput placeholder="User Email" formControlName="email" autocomplete="off" />
       <mat-error *ngIf="updateForm.get('email')?.hasError('required')">
-        {{ "Email Required" }}
+        {{ 'Home.UpdateEmailRequired' | translate }}
       </mat-error>
       <mat-error *ngIf="updateForm.get('email')?.hasError('email')">
-        {{ "The email must be a valid email address" }}
+        {{ 'Home.UpdateEmailValidate' | translate }}
       </mat-error>
     </mat-form-field>
   </div>
   <div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">Close</button>
-    <button mat-button [disabled]="!updateForm.valid" (click)="onSave()" type="submit">
-      Update
-    </button>
+    <button mat-button (click)="onNoClick()">{{'Home.UpdateClose' | translate}}</button>
+    <button mat-button [disabled]="!updateForm.valid" (click)="onSave()" type="submit">{{'Home.UpdateUpdate' | translate}}</button>
   </div>
 </form>

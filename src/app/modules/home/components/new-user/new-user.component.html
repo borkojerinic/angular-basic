@@ -1,28 +1,28 @@
-<h1 mat-dialog-title>Add New User</h1>
+<h1 mat-dialog-title>{{'Home.AddNewUserDialogTitle' | translate}}</h1>
 <form [formGroup]="formAddNewUser">
   <div mat-dialog-content>
     <mat-form-field class="example-full-width" appearance="fill">
-      <mat-label>Name</mat-label>
-      <input matInput placeholder="User Name" formControlName="name" autocomplete="off" />
+      <mat-label>{{'Home.AddNewUserNameLabel' | translate}}</mat-label>
+      <input matInput placeholder="{{'Home.AddNewUserPlaceholderName' | translate}}" formControlName="name" autocomplete="off" />
       <mat-error *ngIf="formAddNewUser.get('name')?.hasError('required')">
-        {{ "Name Required" }}
+        {{ 'Home.AddNewUserNameRequired' | translate }}
       </mat-error>
     </mat-form-field>
     <mat-form-field class="example-full-width" appearance="fill">
-      <mat-label>Email</mat-label>
-      <input matInput placeholder="User Email" formControlName="email" autocomplete="off" />
+      <mat-label>{{'Home.AddNewUserEmailLabel' | translate}}</mat-label>
+      <input matInput placeholder="{{'Home.AddNewUserPlaceholderEmail' | translate}}" formControlName="email" autocomplete="off" />
       <mat-error *ngIf="formAddNewUser.get('email')?.hasError('required')">
-        {{ "Email Required" }}
+        {{ 'Home.AddNewUserEmailRequired' | translate }}
       </mat-error>
       <mat-error *ngIf="formAddNewUser.get('email')?.hasError('email')">
-        {{ "The email must be a valid email address" }}
+        {{ 'Home.AddNewUserEmailValidate' | translate }}
       </mat-error>
     </mat-form-field>
   </div>
   <div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">Close</button>
+    <button mat-button (click)="onNoClick()">{{'Home.AddNewUserClose' | translate}}</button>
     <button mat-button [disabled]="!formAddNewUser.valid" (click)="onSave()" type="submit">
-      Add
+      {{'Home.AddNewUserAdd' | translate}}
     </button>
   </div>
 </form>

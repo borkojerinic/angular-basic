@@ -16,7 +16,15 @@ export class HomeGuard implements CanActivate {
     return this.checkLogin(state.url);
   }
 
+  /**
+   * This method go to login page if user is logged
+   * 
+   * @param url 
+   * 
+   * @returns url or boolean
+   */
   public checkLogin(url: string): any {
+
     let storageLoggedIn: any = this.storageService.getItem('isUserLoggedIn');
     if (url === "/login") {
       if (storageLoggedIn === 'true') {
@@ -30,7 +38,6 @@ export class HomeGuard implements CanActivate {
       } else {
         return this.router.parseUrl('/login');
       }
-
     }
   }
 

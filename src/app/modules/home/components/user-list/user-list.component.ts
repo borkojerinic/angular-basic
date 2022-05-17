@@ -11,6 +11,7 @@ import { DeleteUserComponent } from '../delete-user/delete-user.component';
 import { NewUserComponent } from '../new-user/new-user.component';
 import { DeleteAllComponent } from '../delete-all/delete-all.component';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-user-list',
@@ -43,6 +44,8 @@ export class UserListComponent implements OnInit, OnChanges {
   public direction = '';
   private selectedUsers: IUser[] = [];
   public numOfChecked = 0;
+  public languages: string[] = ['en', 'de'];
+  public language: string = 'en';
 
   //#endregion
 
@@ -50,8 +53,11 @@ export class UserListComponent implements OnInit, OnChanges {
     private userService: UserService,
     private dialog: MatDialog,
     private authService: AuthService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private translate: TranslateService
+  ) {
+    this.translate.setDefaultLang('en');
+  }
 
   //#region Life cycle hooks
 
@@ -86,6 +92,15 @@ export class UserListComponent implements OnInit, OnChanges {
   //#endregion
 
   //#region Functionality
+
+  /**
+   * This method change language
+   * 
+   * @returns void
+   */
+  public changeLanguage(): void {
+    this.translate.use(this.language);
+  }
 
   /**
    * 
@@ -223,12 +238,13 @@ export class UserListComponent implements OnInit, OnChanges {
    * @returns void
    */
   public openDeleteAllDialog(): void {
-    this.disableDeleteAllButton = true;
+    this.disableDeleteAllButton = false;
     const dialogRef = this.dialog.open(DeleteAllComponent, { data: { selected: this.selectedUsers } });
 
     dialogRef.afterClosed()
       .subscribe(result => {
         if (result) {
+          this.disableDeleteAllButton = true;
           this.numOfChecked = 0;
           this.selectedUsers = [];
           this.getUsers();

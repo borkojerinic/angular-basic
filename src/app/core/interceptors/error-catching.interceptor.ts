@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { SnackBarService } from '@app-services';
+import { MessageType } from 'src/app/shared/enums/message-type';
 
 @Injectable()
 export class ErrorCatchingInterceptor implements HttpInterceptor {
@@ -31,7 +32,7 @@ export class ErrorCatchingInterceptor implements HttpInterceptor {
                     } else {
                         errorMsg = `Error Code: ${error.status},  Message: ${error.message}`;
                     }
-                    this.snackBarService.showSnackBarMessage(error.error.errors.email[0], "Ok");
+                    this.snackBarService.showSnackBarMessage(error.error.errors.email[0], "Ok", MessageType.error, 2000);
                     return throwError(() => {
                         return errorMsg;
                     });

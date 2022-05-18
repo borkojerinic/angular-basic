@@ -19,7 +19,6 @@ export class AuthService {
   //#region Class functionality
 
   /**
-   * 
    * This method check email and password and set item on local storage
    * 
    * @param email string
@@ -32,18 +31,19 @@ export class AuthService {
     this.isLogged = email === 'admin' && password === 'admin';
 
     this.storageService.useLocalStorage(check);
-    this.storageService.setItem('isUserLoggedIn', this.isLogged ? 'true' : 'false');
+    // this.storageService.useLocalStorage(this.rememberMe);
+    this.storageService.setItem('isUserLoggedIn', this.isLogged);
 
-    return of(this.isLogged).pipe(
-      delay(1000),
-      tap(val => {
-        console.log('Is User Authentication is successful: ' + val);
-      })
-    );
+    return of(this.isLogged)
+      .pipe(
+        delay(1000),
+        tap(val => {
+          console.log('Is User Authentication is successful: ' + val);
+        })
+      );
   }
 
   /**
-   * 
    * This method set logged user to false and remove item from local storage
    * 
    * @returns void

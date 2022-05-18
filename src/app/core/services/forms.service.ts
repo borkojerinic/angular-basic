@@ -16,7 +16,7 @@ export class FormsService {
    */
   public getLoginForm(): FormGroup {
     return new FormGroup({
-      userEmail: new FormControl('', [Validators.required, Validators.email]),
+      userEmail: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required]),
       check: new FormControl(false)
     });

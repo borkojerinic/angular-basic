@@ -24,17 +24,17 @@ export class HomeGuard implements CanActivate {
    * @returns url or boolean
    */
   public checkLogin(url: string): any {
-
     let storageLoggedIn: any = this.storageService.getItem('isUserLoggedIn');
+
     if (url === "/login") {
-      if (storageLoggedIn === 'true') {
+      if (storageLoggedIn === true) {
         return this.router.parseUrl('/home');
       } else {
         return true;
       }
     } else {
-      if (storageLoggedIn === 'true') {
-        return true
+      if (storageLoggedIn === true) {
+        return true;
       } else {
         return this.router.parseUrl('/login');
       }

@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserService, SnackBarService, FormsService } from '@app-services';
 import { User } from '@app-models';
 import { TranslateService } from '@ngx-translate/core';
+import { MessageType } from 'src/app/shared/enums/message-type';
 
 @Component({
   selector: 'app-update-user',
@@ -26,7 +27,7 @@ export class UpdateUserComponent implements OnInit {
     private snackBarService: SnackBarService,
     private translateService: TranslateService,
     private formsService: FormsService
-  ) {}
+  ) { }
 
   //#region LifeCycle
 
@@ -60,7 +61,7 @@ export class UpdateUserComponent implements OnInit {
         this.dialogRef.close(true);
         this.snackBarService.showSnackBarMessage(
           this.translateService.instant('Home.UserUpdated'),
-          'Ok'
+          'Ok', MessageType.success, 5000
         );
       });
   }

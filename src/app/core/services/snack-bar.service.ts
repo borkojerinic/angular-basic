@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MessageType } from 'src/app/shared/enums/message-type';
 
 @Injectable({
     providedIn: 'root'
@@ -18,8 +19,11 @@ export class SnackBarService {
      * @param action string - Close button text.
      */
 
-    public showSnackBarMessage(message: string, action: string): void {
-        this.snackBar.open(message, action);
+    public showSnackBarMessage(message: string, action: string, mode: MessageType, duration: number): void {
+        const config = new MatSnackBarConfig();
+        config.panelClass = [mode + '-notification'];
+        config.duration = duration;
+        this.snackBar.open(message, action, config);
     }
 
     //#endregion

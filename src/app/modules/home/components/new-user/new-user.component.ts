@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { UserService, SnackBarService, FormsService } from '@app-services';
 import { User } from '@app-models';
+import { MessageType } from 'src/app/shared/enums/message-type';
 
 @Component({
   selector: 'app-new-user',
@@ -55,7 +56,7 @@ export class NewUserComponent implements OnInit {
     this.service.addUser(this.formAddNewUser.value as User)
       .subscribe(() => {
         this.dialogRef.close(true);
-        this.snackBarService.showSnackBarMessage('Successfully added', 'Ok');
+        this.snackBarService.showSnackBarMessage('Successfully added', 'Ok', MessageType.success, 5000);
       });
   }
 

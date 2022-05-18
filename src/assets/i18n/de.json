@@ -38,7 +38,9 @@
         "AddNewUserEmailRequired" : "Email Required de",
         "AddNewUserEmailValidate" : "The email must be a valid email address de",
         "PaginatorPerItem" : "Items per page de",
-        "UserUpdated": "Der Userund updaten sie hast."
+        "UserUpdated": "Der Userund updaten sie hast.",
+        "UserDeleted": "Der Userund deleten sie hast.",
+        "DeleteAllDeleted" : "Deleted de"
     },
     "Auth":{
         "EmailRequired" : "Email Required de",

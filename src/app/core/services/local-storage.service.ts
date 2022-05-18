@@ -12,19 +12,27 @@ export class LocalStorageService {
 
     //#endregion
 
-    constructor() { }
+    constructor() {
+        const session = sessionStorage.getItem('isUserLoggedIn');
+        const local = localStorage.getItem('isUserLoggedIn');
+        if (session) {
+            this.storage = sessionStorage;
+        } else if (local) {
+            this.storage = localStorage;
+        }
+    }
 
     //#region Class functionality
 
     /**
      * Set storage type
      * 
-     * @param use true for local storage, false for session storage
+     * @param useLocalStorage true for local storage, false for session storage
      * 
      * @returns void
      */
-    public useLocalStorage(use: boolean): void {
-        this.storage = use ? localStorage : sessionStorage;
+    public useLocalStorage(useLocalStorage: boolean): void {
+        this.storage = useLocalStorage ? localStorage : sessionStorage;
     }
 
     /**
@@ -48,6 +56,7 @@ export class LocalStorageService {
      */
     public getItem(key: string): unknown {
         return JSON.parse(this.storage.getItem(key) || '{}');
+
     }
 
     /**

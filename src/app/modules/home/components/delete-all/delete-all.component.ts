@@ -3,6 +3,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { UserService, SnackBarService } from '@app-services';
 import { User } from '@app-models';
+import { MessageType } from 'src/app/shared/enums/message-type';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-delete-all',
@@ -16,7 +18,8 @@ export class DeleteAllComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<DeleteAllComponent>,
     private service: UserService,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private translateService: TranslateService
   ) { }
 
   //#region  UI Responses
@@ -39,7 +42,7 @@ export class DeleteAllComponent {
     forkJoin(this.data.selected.map((x: User) => this.service.deleteUser(x)))
       .subscribe(() => {
         this.dialogRef.close(true);
-        this.snackBarService.showSnackBarMessage('Deleted', 'Ok');
+        this.snackBarService.showSnackBarMessage(this.translateService.instant('Home.DeleteAllDeleted'), 'Ok', MessageType.success, 5000);
       });
   }
 

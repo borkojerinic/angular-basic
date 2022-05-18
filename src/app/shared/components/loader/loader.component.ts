@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SpinnerService } from '@app-services';
 
 @Component({
   selector: 'app-loader',
   templateUrl: './loader.component.html',
-  styleUrls: ['./loader.component.scss']
+  styleUrls: ['./loader.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderComponent implements OnInit {
+export class LoaderComponent {
 
   //#region Class properties
 
@@ -18,20 +19,5 @@ export class LoaderComponent implements OnInit {
 
   constructor(private spinnerService: SpinnerService) {
   }
-
-  //#region Life cycle hooks
-
-  /**
-   * 
-   * On init of this component, it's necessary to init current date information.
-   * 
-   * @returns void
-   */
-
-  ngOnInit(): void {
-
-  }
-
-  //#endregion
 
 }

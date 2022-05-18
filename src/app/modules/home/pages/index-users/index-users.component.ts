@@ -1,12 +1,14 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { SingleUser } from '@app-models';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-index-users',
   templateUrl: './index-users.component.html',
-  styleUrls: ['./index-users.component.scss']
+  styleUrls: ['./index-users.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class IndexUsersComponent implements OnInit {
+export class IndexUsersComponent {
 
   //#region Angular stuff (@Output)
 
@@ -20,25 +22,11 @@ export class IndexUsersComponent implements OnInit {
 
   //#region Class properties
 
-  public filterUsers: string = '';
+  public filterUsers$ = new BehaviorSubject<string>('');
 
   //#endregion
 
   constructor() { }
-
-  //#region Life cycle hooks
-
-  /**
-   * 
-   * On init of this component, it's necessary to init current date information.
-   * 
-   */
-
-  ngOnInit(): void {
-
-  }
-
-  //#endregion
 
   //#region UI response
 
@@ -50,8 +38,8 @@ export class IndexUsersComponent implements OnInit {
    * @returns void
    */
 
-  public onKeyUp(message: string): void {
-    this.filterUsers = message;
+  public onKeyUp(message: string): void {    
+    this.filterUsers$.next(message);    
   }
 
   //#endregion

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { IUser, SingleUser, UsersResponse } from '@app-models';
+import { User, SingleUser, UsersResponse } from '@app-models';
 
 @Injectable({
   providedIn: 'root'
@@ -71,8 +71,8 @@ export class UserService {
    * @param user IUser - user for update
    * @returns Observable<IUser>
    */
-  public updateUser(user: IUser): Observable<IUser> {
-    return this.http.put<IUser>(this.userUrl + `/${user.id}`, user);
+  public updateUser(user: User): Observable<User> {
+    return this.http.put<User>(this.userUrl + `/${user.id}`, user);
   }
 
   /**
@@ -83,7 +83,7 @@ export class UserService {
    * 
    * @returns Observable<unknown> - response from server
    */
-  public deleteUser(user: IUser): Observable<unknown> {
+  public deleteUser(user: User): Observable<unknown> {
     return this.http.delete(this.userUrl + `/${user.id}`);
   }
 
@@ -95,7 +95,7 @@ export class UserService {
    *  
    * @returns Observable<unknown> - response from server
    */
-  public addUser(user: IUser): Observable<unknown> {
+  public addUser(user: User): Observable<unknown> {
     return this.http.post(this.userUrl, user);
   }
 

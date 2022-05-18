@@ -36,7 +36,8 @@
         "AddNewUserPlaceholderEmail" : "User Email en",
         "AddNewUserNameRequired" : "Name Required en",
         "AddNewUserEmailRequired" : "Email Required en",
-        "AddNewUserEmailValidate" : "The email must be a valid email address en"
+        "AddNewUserEmailValidate" : "The email must be a valid email address en",
+        "PaginatorPerItem" : "Items per page en"
     },
     "Auth":{
         "EmailRequired" : "Email Required en",

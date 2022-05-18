@@ -1,6 +1,6 @@
 import { Meta } from "./meta";
 
-export interface IUser {
+export interface User {
     id: number,
     name: string,
     email: string,
@@ -9,7 +9,7 @@ export interface IUser {
 }
 
 export interface SingleUser {
-    data: IUser;
+    data: User;
 }
 
 export interface SingleMeta {

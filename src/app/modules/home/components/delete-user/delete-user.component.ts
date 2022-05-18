@@ -1,37 +1,22 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SnackBarService, UserService } from '@app-services';
-import { IUser } from '@app-models';
+import { User } from '@app-models';
 
 @Component({
   selector: 'app-delete-user',
   templateUrl: './delete-user.component.html',
-  styleUrls: ['./delete-user.component.scss']
+  styleUrls: ['./delete-user.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeleteUserComponent implements OnInit {
+export class DeleteUserComponent {
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: IUser,
-    public dialogRef: MatDialogRef<DeleteUserComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: User,
+    private dialogRef: MatDialogRef<DeleteUserComponent>,
     private service: UserService,
     private snackBarService: SnackBarService
   ) { }
-
-  //#region Life cycle hooks
-
-  /**
-   * 
-   * On init of this component, it's necessary to init current date information.
-   * 
-   * @returns void
-   * 
-   */
-
-  public ngOnInit(): void {
-
-  }
-
-  //#endregion
 
   //#region UI responses
 

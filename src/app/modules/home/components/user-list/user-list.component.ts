@@ -1,10 +1,10 @@
-import { Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { filter, first } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material/sort';
-import { IUser } from '@app-models';
+import { User } from '@app-models';
 import { AuthService, UserService } from '@app-services';
 import { UpdateUserComponent } from '../update-user/update-user.component';
 import { DeleteUserComponent } from '../delete-user/delete-user.component';
@@ -16,7 +16,8 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss']
+  styleUrls: ['./user-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserListComponent implements OnInit, OnChanges {
 
@@ -25,14 +26,14 @@ export class UserListComponent implements OnInit, OnChanges {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
-  @Input() listOfUsers: string = '';
+  @Input() searchString: string = '';
 
   //#endregion
 
   //#region Class properties
 
   public displayedColumns: string[] = ['check', 'id', 'name', 'email', 'created', 'action'];
-  public dataSource: MatTableDataSource<IUser> = new MatTableDataSource();
+  public dataSource: MatTableDataSource<User> = new MatTableDataSource();
   public pageSizeOptions = [2, 5, 7, 10, 100];
   public length = 0;
   public pageSize = 10;
@@ -42,7 +43,7 @@ export class UserListComponent implements OnInit, OnChanges {
   public disableDeleteAllButton = true;
   public orderBy = '';
   public direction = '';
-  private selectedUsers: IUser[] = [];
+  private selectedUsers: User[] = [];
   public numOfChecked = 0;
   public languages: string[] = ['en', 'de'];
   public language: string = 'en';
@@ -68,11 +69,8 @@ export class UserListComponent implements OnInit, OnChanges {
    * @returns void
    */
   public ngOnChanges(): void {
-    if (this.lastSearch !== this.listOfUsers) {
-      if (this.listOfUsers === '') {
-        this.listOfUsers = '';
-      }
-      this.lastSearch = this.listOfUsers;
+    if (this.lastSearch !== this.searchString) {
+      this.lastSearch = this.searchString;
       this.pageIndex = 0;
       this.getUsers();
     }
@@ -109,11 +107,11 @@ export class UserListComponent implements OnInit, OnChanges {
    * @returns void
    */
   private getUsers(): void {
-    this.userService.getUsers(this.pageSize, this.pageIndex, this.listOfUsers, this.orderBy, this.direction)
+    this.userService.getUsers(this.pageSize, this.pageIndex, this.searchString, this.orderBy, this.direction)
       .pipe(first())
       .subscribe((users) => {
-        for (let x of users.data) {
-          x.checked = this.selectedUsers.find(sel => sel.id === x.id) != undefined;
+        for (let userData of users.data) {
+          userData.checked = this.selectedUsers.find(sel => sel.id === userData.id) != undefined;
         }
         this.dataSource.data = users.data;
         this.length = users.meta.total;
@@ -186,15 +184,15 @@ export class UserListComponent implements OnInit, OnChanges {
   public openDeleteDialog(userId: number, userName: string, userEmail: string): void {
     const dialogRef = this.dialog.open(DeleteUserComponent, { data: { id: userId, name: userName, email: userEmail } });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+    dialogRef.afterClosed()
+      .pipe(filter(x => !!x))
+      .subscribe(() => {
         const index = this.selectedUsers.findIndex(newItem => newItem.id === userId);
         if (index !== -1) {
           this.selectedUsers.splice(index, 1);
         }
         this.getUsers();
-      }
-    });
+      });
   }
 
   /**
@@ -225,7 +223,6 @@ export class UserListComponent implements OnInit, OnChanges {
     this.direction = sort.direction;
     this.orderBy = sort.active;
     if (!sort.active || sort.direction === '') {
-      this.direction = '';
       this.orderBy = '';
     }
     this.getUsers();
@@ -242,13 +239,12 @@ export class UserListComponent implements OnInit, OnChanges {
     const dialogRef = this.dialog.open(DeleteAllComponent, { data: { selected: this.selectedUsers } });
 
     dialogRef.afterClosed()
-      .subscribe(result => {
-        if (result) {
-          this.disableDeleteAllButton = true;
-          this.numOfChecked = 0;
-          this.selectedUsers = [];
-          this.getUsers();
-        }
+      .pipe(filter(x => !!x))
+      .subscribe(() => {
+        this.disableDeleteAllButton = true;
+        this.numOfChecked = 0;
+        this.selectedUsers = [];
+        this.getUsers();
       });
   }
 
@@ -256,31 +252,21 @@ export class UserListComponent implements OnInit, OnChanges {
    * 
    * Make array of checked users and set disable property for Delete All button
    * 
-   * @param item IUser - checked user
+   * @param user IUser - checked user
    * @param event checked (true, false)
    * 
    * @returns void
    */
-  public getUserFromCheckbox(item: IUser, event: any): void {
-    const index = this.selectedUsers.findIndex(newItem => newItem.id === item.id);
-    if (event.checked) {
-      if (index === -1) {
-        item.checked = event.checked;
-        this.selectedUsers.push(item);
-      }
-    } else {
-      if (index !== -1) {
-        item.checked = event.checked;
-        this.selectedUsers.splice(index, 1);
-      }
+  public getUserFromCheckbox(user: User, event: any): void {
+    const index = this.selectedUsers.findIndex(x => x.id === user.id);
+    if (index === -1 && event.checked) {
+      user.checked = event.checked;
+      this.selectedUsers.push(user);
+    } else if (index !== -1 && !event.checked)  {      
+      user.checked = event.checked;
+      this.selectedUsers.splice(index, 1);
     }
-
-    if (this.selectedUsers.length === 0) {
-      this.disableDeleteAllButton = true;
-    } else {
-      this.disableDeleteAllButton = false;
-    }
-
+    this.disableDeleteAllButton = (this.selectedUsers.length === 0) ? true : false;
     this.numOfChecked = this.selectedUsers.length;
   }
 

@@ -1,19 +1,14 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-filter-user',
   templateUrl: './filter-user.component.html',
-  styleUrls: ['./filter-user.component.scss']
+  styleUrls: ['./filter-user.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterUserComponent implements OnInit {
+export class FilterUserComponent {
 
   //#region Angular stuff (@Output)
-
-  /**
-   * 
-   * @param search string - Emit string to parent component
-   * 
-   */
 
   @Output() search: EventEmitter<string> = new EventEmitter<string>();
 
@@ -27,24 +22,9 @@ export class FilterUserComponent implements OnInit {
 
   constructor() { }
 
-  //#region Life cycle hooks
-
-  /**
-   * 
-   * On init of this component, it's necessary to init current date information.
-   * 
-   * @returns void
-   */
-  public ngOnInit(): void {
-    
-  }
-
-  //#endregion
-
   //#region UI response
 
   /**
-   * 
    * This method emit string from input to parent component
    * 
    * @returns void
@@ -55,7 +35,6 @@ export class FilterUserComponent implements OnInit {
   }
 
   /**
-   * 
    * This method clear input on user click and emit string to parent component
    * 
    * @returns void

@@ -44,7 +44,7 @@
     </table>
     <div class="pagination-delete-wrapper">
       <button mat-raised-button [disabled]="disableDeleteAllButton" (click)="openDeleteAllDialog()" class="deleteAllButton">
-        {{'Home.DeleteAll' | translate}} ({{numOfChecked}})
+        {{'Home.DeleteAll' | translate}} <span *ngIf="numOfChecked > 0">({{numOfChecked}})</span>
       </button>
   
       <mat-paginator

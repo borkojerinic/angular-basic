@@ -1,10 +1,10 @@
 
 import { Links } from "./links";
 import { Meta } from "./meta";
-import { IUser } from "./user";
+import { User } from "./user";
 
 export interface UsersResponse {
-    data: IUser[];
+    data: User[];
     links: Links;
     meta: Meta;
 }

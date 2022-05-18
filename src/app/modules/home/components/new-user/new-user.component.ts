@@ -1,42 +1,34 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { UserService, SnackBarService } from '@app-services';
-import { IUser } from '@app-models';
+import { UserService, SnackBarService, FormsService } from '@app-services';
+import { User } from '@app-models';
 
 @Component({
   selector: 'app-new-user',
   templateUrl: './new-user.component.html',
-  styleUrls: ['./new-user.component.scss']
+  styleUrls: ['./new-user.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewUserComponent implements OnInit {
 
   //#region Class properties
 
-  public formAddNewUser: FormGroup = new FormGroup({
-    name: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email])
-  });
+  public formAddNewUser: FormGroup = {} as FormGroup;
 
   //#endregion
 
   constructor(
-    public dialogRef: MatDialogRef<NewUserComponent>,
+    private dialogRef: MatDialogRef<NewUserComponent>,
     private service: UserService,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private formsService: FormsService
   ) { }
 
-  //#region Life cycle hooks
+  // #region LifeCycle
 
-  /**
-   * 
-   * On init of this component, it's necessary to init current date information.
-   * 
-   * @returns void
-   */
-
-  public ngOnInit(): void {
-
+  ngOnInit(): void {
+    this.formAddNewUser = this.formsService.getNewUserForm();
   }
 
   //#endregion
@@ -60,8 +52,8 @@ export class NewUserComponent implements OnInit {
    * @returns void
    */
   public onSave(): void {
-    this.service.addUser(this.formAddNewUser.value as IUser)
-      .subscribe((response) => {
+    this.service.addUser(this.formAddNewUser.value as User)
+      .subscribe(() => {
         this.dialogRef.close(true);
         this.snackBarService.showSnackBarMessage('Successfully added', 'Ok');
       });

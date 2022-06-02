@@ -2,10 +2,9 @@ import { DatePipe } from "@angular/common";
 import { Pipe, PipeTransform } from "@angular/core";
 
 @Pipe({
-    name: 'customDate'
+    name: 'customMediumDateFormat'
 })
-
-export class CustomDatePipe implements PipeTransform {
+export class CustomMediumDateFormatPipe implements PipeTransform {
     transform(value: string) {
         let pattern = /(\d{2})\.(\d{2})\.(\d{4})/;
         let newDate = new Date(value.replace(pattern, '$3-$2-$1'));

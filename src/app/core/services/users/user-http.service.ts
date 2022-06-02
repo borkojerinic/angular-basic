@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-
-import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
-import { User, SingleUser, UsersResponse } from '@app-models';
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { Observable, shareReplay, tap } from "rxjs";
+import { User, SingleUser, UsersResponse, QueryParams } from '@app-models';
 
 @Injectable({
   providedIn: 'root'
@@ -23,37 +22,26 @@ export class UserService {
   //#region Functionality
 
   /**
-   * 
    * Get users from server
    * 
-   * @param pageSize 
-   * @param pageIndex 
-   * @param search 
-   * @param orderBy 
-   * @param direction
+   * @param parameters QueryParams
    *  
    * @returns Observable<UsersResponse> - array of users(IUser[]), Links and Meta 
    */
-  public getUsers(pageSize: number, pageIndex: number, search: string, orderBy: string, direction: string): Observable<UsersResponse> {
-    this.queryParams = `?pageSize=${pageSize}&page=${pageIndex + 1}&search=${search}&order=${orderBy}&direction=${direction}`;
+  public getUsers(parameters: QueryParams): Observable<UsersResponse> {
+    // const params = new HttpParams()
+    //   .set('page', parameters.page + 1)
+    //   .set('pageSize', parameters.pageSize)
+    //   .set('search', parameters.search)
+    //   .set('order', parameters.order)
+    //   .set('direction', parameters.direction);
 
-    return this.http.get<UsersResponse>(this.userUrl + this.queryParams);
+    // this.queryParams = `?${params.toString()}`;
+
+    return this.http.get<UsersResponse>(this.userUrl, { params: parameters as any });
   }
 
   /**
-   * 
-   * Get filtered users from server
-   * 
-   * @param search string - input from FilterUserComponent
-   * 
-   * @returns Observable<UsersResponse> - array of users(IUser[]), Links and Meta
-   */
-  public filter(search: string): Observable<UsersResponse> {
-    return this.http.get<UsersResponse>(this.userUrl + `${this.queryParams}&search=${search}`);
-  }
-
-  /**
-   * 
    * Get one user from server 
    * 
    * @param id number - user id
@@ -65,7 +53,6 @@ export class UserService {
   }
 
   /**
-   * 
    * Update user on server
    * 
    * @param user IUser - user for update
@@ -76,7 +63,6 @@ export class UserService {
   }
 
   /**
-   * 
    * Delete user from server
    * 
    * @param user IUser - user for deletion
@@ -88,7 +74,6 @@ export class UserService {
   }
 
   /**
-   * 
    * Add new user on server
    * 
    * @param user IUser - new user

@@ -19,8 +19,8 @@
       </mat-error>
     </mat-form-field>
   </div>
-  <div mat-dialog-actions>
-    <button mat-button (click)="onNoClick()">{{'Home.UpdateClose' | translate}}</button>
-    <button mat-button [disabled]="!updateForm.valid" (click)="onSave()" type="submit">{{'Home.UpdateUpdate' | translate}}</button>
-  </div>
 </form>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">{{'Home.UpdateClose' | translate}}</button>
+  <button mat-button [disabled]="!updateForm.valid" (click)="onSave()" type="submit">{{'Home.UpdateUpdate' | translate}}</button>
+</div>

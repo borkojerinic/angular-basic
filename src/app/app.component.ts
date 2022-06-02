@@ -11,8 +11,10 @@ export class AppComponent {
   title = 'crudAngular';
 
   constructor(private translate: TranslateService) {
-    this.translate.addLangs(['en', 'de']);
-    this.translate.setDefaultLang('en');
-    this.translate.use('en');
+    // this.setTranslateConfig();
+  }
+
+  public setTranslateConfig(): void {
+    this.translate.use('de');
   }
 }

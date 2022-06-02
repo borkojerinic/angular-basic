@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { forkJoin } from 'rxjs';
 import { UserService, SnackBarService } from '@app-services';
 import { User } from '@app-models';
-import { MessageType } from 'src/app/shared/enums/message-type';
+import { MessageType } from '@app-enums';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -42,7 +42,7 @@ export class DeleteAllComponent {
     forkJoin(this.data.selected.map((x: User) => this.service.deleteUser(x)))
       .subscribe(() => {
         this.dialogRef.close(true);
-        this.snackBarService.showSnackBarMessage(this.translateService.instant('Home.DeleteAllDeleted'), 'Ok', MessageType.success, 5000);
+        this.snackBarService.showSnackBarMessage(this.translateService.instant('Home.DeleteAllDeleted'), MessageType.success);
       });
   }
 

@@ -17,6 +17,18 @@
       ],
       "@app-components":[
         "src/app/shared/components/"
+      ],
+      "@app-enums":[
+        "src/app/shared/enums/"
+      ],
+      "@app-auth":[
+        "src/app/modules/auth/"
+      ],
+      "@app-guards":[
+        "src/app/core/guards/"
+      ],
+      "@app-pipes":[
+        "src/app/core/pipes/"
       ]
     },
     "baseUrl": "./",
@@ -38,7 +50,8 @@
     "lib": [
       "es2020",
       "dom"
-    ]
+    ],
+    "strictPropertyInitialization": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

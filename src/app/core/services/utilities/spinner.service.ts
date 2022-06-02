@@ -9,6 +9,7 @@ export class SpinnerService {
   //#region Class properties
 
   public isLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public requestCounter: number = 0;
 
   //#endregion
 
@@ -18,23 +19,27 @@ export class SpinnerService {
   //#region Functionality
 
   /**
-   * 
    * This method show loading spinner
    * 
    * @returns void
    */
   public show(): void {
-    this.isLoading$.next(true);
+    if (this.requestCounter === 0) {
+      this.isLoading$.next(true);
+    }
+    this.requestCounter++;
   }
 
   /**
-   * 
    * This method hide loading spinner
    * 
    * @returns void
    */
   public hide(): void {
-    this.isLoading$.next(false);
+    this.requestCounter--;
+    if (this.requestCounter === 0) {
+      this.isLoading$.next(false);
+    }
   }
 
   //#endregion

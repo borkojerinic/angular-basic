@@ -1,12 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeGuard } from 'src/app/core/guards/home.guard';
-import { HomeModule } from './home.module';
-import { IndexUsersComponent } from './pages/index-users/index-users.component';
+import { RouteName } from '@app-enums';
+import { IndexUsersComponent, NewUserComponent } from '@app-home';
 
 const routes: Routes = [
   {
-    path: 'home', component: IndexUsersComponent, canActivate: [HomeGuard]
+    path: RouteName.default,
+    component: IndexUsersComponent,
+  },
+  {
+    path: RouteName.new,
+    component: NewUserComponent
   }
 ];
 

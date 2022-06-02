@@ -11,11 +11,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HeaderComponent } from './shared/components/header/header.component';
+import { MaterialModule } from './shared/modules/material/material.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoaderComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -24,6 +27,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
     HttpClientModule,
     HomeModule,
     AuthModule,
+    MaterialModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -40,10 +44,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-
-// export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
-//   return new TranslateHttpLoader(http);
-// }
 
 export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');

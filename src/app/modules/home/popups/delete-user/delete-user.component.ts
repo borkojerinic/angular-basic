@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SnackBarService, UserService } from '@app-services';
 import { User } from '@app-models';
-import { MessageType } from 'src/app/shared/enums/message-type';
+import { MessageType } from '@app-enums';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -41,7 +41,9 @@ export class DeleteUserComponent {
     this.service.deleteUser(this.data)
       .subscribe(() => {
         this.dialogRef.close(true);
-        this.snackBarService.showSnackBarMessage(this.translateService.instant('Home.UserDeleted'), 'Ok', MessageType.success, 5000);
+        this.snackBarService.showSnackBarMessage(
+          this.translateService.instant('Home.UserDeleted'),
+          MessageType.success);
       });
   }
 

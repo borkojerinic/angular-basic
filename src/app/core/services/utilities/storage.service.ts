@@ -1,21 +1,26 @@
 import { Injectable } from '@angular/core';
+import { QueryParams, User } from '@app-models';
 
 @Injectable({
     providedIn: 'root'
 })
 
-export class LocalStorageService {
+export class StorageService {
 
     //#region Class properties
 
     private storage = localStorage;
+    public selectedUsers: User[] = [];
+    public queryParams: QueryParams;
+    public loadOrNavigateBack = 0;
 
     //#endregion
 
     constructor() {
         const session = sessionStorage.getItem('isUserLoggedIn');
         const local = localStorage.getItem('isUserLoggedIn');
-        if (session) {
+
+        if (session === 'true') {
             this.storage = sessionStorage;
         } else if (local) {
             this.storage = localStorage;
@@ -54,9 +59,8 @@ export class LocalStorageService {
      * 
      * @returns value of the specified Storage Object item
      */
-    public getItem(key: string): unknown {
+    public getItem(key: string): boolean {
         return JSON.parse(this.storage.getItem(key) || '{}');
-
     }
 
     /**
@@ -71,11 +75,11 @@ export class LocalStorageService {
     }
 
     /**
-     * 
      * This method clears all keys stored in a given Storage object.
      * 
+     * @returns void
      */
-    public clear() {
+    public clear(): void {
         this.storage.clear();
     }
 

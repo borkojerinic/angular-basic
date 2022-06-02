@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { HomeRoutingModule } from './home-routing.module';
 import {
+  FilterUserComponent,
+  UserListComponent,
+  IndexUsersComponent,
   DeleteAllComponent,
   DeleteUserComponent,
-  FilterUserComponent,
   NewUserComponent,
-  UpdateUserComponent,
-  UserListComponent,
-  IndexUsersComponent
+  UpdateUserComponent
 } from '@app-home';
 import { MaterialModule } from 'src/app/shared/modules/material/material.module';
 import { TranslateModule } from '@ngx-translate/core';
-import { CustomDatePipe } from 'src/app/core/pipes/custom-date.pipe';
+import { CustomMediumDateFormatPipe } from '@app-pipes';
 
 @NgModule({
   exports: [
@@ -26,7 +26,7 @@ import { CustomDatePipe } from 'src/app/core/pipes/custom-date.pipe';
     UpdateUserComponent,
     UserListComponent,
     IndexUsersComponent,
-    CustomDatePipe
+    CustomMediumDateFormatPipe
   ],
   imports: [
     HomeRoutingModule,

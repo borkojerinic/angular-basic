@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeGuard } from 'src/app/core/guards/home.guard';
-import { LoginComponent } from './components/login/login.component';
+import { RouteName } from '@app-enums';
+import { LoginComponent } from '@app-auth';
+import { UserAuthorizedGuard } from '@app-guards';
 
 const routes: Routes = [
   {
-    path: 'login', component: LoginComponent, canActivate: [HomeGuard]
+    path: RouteName.login,
+    component: LoginComponent,
+    canActivate: [UserAuthorizedGuard]
   }
 ];
 

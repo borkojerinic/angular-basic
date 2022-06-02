@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { catchError, Observable, throwError } from 'rxjs';
 import { SnackBarService } from '@app-services';
-import { MessageType } from 'src/app/shared/enums/message-type';
+import { MessageType } from '@app-enums';
 
 @Injectable()
 export class ErrorCatchingInterceptor implements HttpInterceptor {
@@ -13,7 +13,6 @@ export class ErrorCatchingInterceptor implements HttpInterceptor {
     //#region Utilities
 
     /**
-     * 
      * Identifies and handles a given HTTP request. 
      * 
      * @param request The outgoing request object to handle.
@@ -21,7 +20,6 @@ export class ErrorCatchingInterceptor implements HttpInterceptor {
      * 
      * @returns Observable<HttpEvent<unknown>> - An observable of the event stream. 
      */
-
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         return next.handle(request)
             .pipe(
@@ -32,7 +30,11 @@ export class ErrorCatchingInterceptor implements HttpInterceptor {
                     } else {
                         errorMsg = `Error Code: ${error.status},  Message: ${error.message}`;
                     }
-                    this.snackBarService.showSnackBarMessage(error.error.errors.email[0], "Ok", MessageType.error, 2000);
+                    this.snackBarService.showSnackBarMessage(
+                        error.error.errors.email[0],
+                        MessageType.error,
+                        5000,
+                        "Try Again");
                     return throwError(() => {
                         return errorMsg;
                     });

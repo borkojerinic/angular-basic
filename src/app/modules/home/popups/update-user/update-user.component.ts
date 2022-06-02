@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UserService, SnackBarService, FormsService } from '@app-services';
 import { User } from '@app-models';
 import { TranslateService } from '@ngx-translate/core';
-import { MessageType } from 'src/app/shared/enums/message-type';
+import { MessageType } from '@app-enums';
 
 @Component({
   selector: 'app-update-user',
@@ -16,7 +16,7 @@ export class UpdateUserComponent implements OnInit {
 
   //#region Class properties
 
-  public updateForm: FormGroup = {} as FormGroup;
+  public updateForm: FormGroup;
 
   //#endregion
 
@@ -40,7 +40,6 @@ export class UpdateUserComponent implements OnInit {
   //#region UI response
 
   /**
-   * 
    * Close opened dialog
    * 
    * @returns void
@@ -50,18 +49,17 @@ export class UpdateUserComponent implements OnInit {
   }
 
   /**
-   * 
    * Update user and show snack bar message.
    * 
    * @returns void
    */
   public onSave(): void {
-    this.service.updateUser(this.updateForm.value as User)
+    this.service.updateUser(this.updateForm.value)
       .subscribe(() => {
-        this.dialogRef.close(true);
+        this.dialogRef.close(this.updateForm.value);
         this.snackBarService.showSnackBarMessage(
           this.translateService.instant('Home.UserUpdated'),
-          'Ok', MessageType.success, 5000
+          MessageType.success
         );
       });
   }

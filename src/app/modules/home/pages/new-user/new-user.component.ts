@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
-import { UserService, SnackBarService, FormsService } from '@app-services';
-import { User } from '@app-models';
-import { MessageType } from 'src/app/shared/enums/message-type';
+import { UserService, SnackBarService, FormsService, StorageService } from '@app-services';
+import { Router } from '@angular/router';
+import { RouteName, MessageType } from '@app-enums';
 
 @Component({
   selector: 'app-new-user',
@@ -15,21 +14,23 @@ export class NewUserComponent implements OnInit {
 
   //#region Class properties
 
-  public formAddNewUser: FormGroup = {} as FormGroup;
+  public formAddNewUser: FormGroup;
 
   //#endregion
 
   constructor(
-    private dialogRef: MatDialogRef<NewUserComponent>,
     private service: UserService,
     private snackBarService: SnackBarService,
-    private formsService: FormsService
+    private formsService: FormsService,
+    private router: Router,
+    private storage: StorageService
   ) { }
 
   // #region LifeCycle
 
   ngOnInit(): void {
     this.formAddNewUser = this.formsService.getNewUserForm();
+    this.storage.loadOrNavigateBack = 1;
   }
 
   //#endregion
@@ -37,26 +38,26 @@ export class NewUserComponent implements OnInit {
   //#region UI response
 
   /**
-   * 
    * This method close opened dialog.
    * 
    * @returns void
    */
-  public onNoClick(): void {
-    this.dialogRef.close(false);
+  public onBack(): void {
+    this.router.navigate([`/${RouteName.home}`]);
   }
 
   /**
-   * 
    * Add new user and show snack bar message.
    * 
    * @returns void
    */
   public onSave(): void {
-    this.service.addUser(this.formAddNewUser.value as User)
+    this.service.addUser(this.formAddNewUser.value)
       .subscribe(() => {
-        this.dialogRef.close(true);
-        this.snackBarService.showSnackBarMessage('Successfully added', 'Ok', MessageType.success, 5000);
+        this.snackBarService.showSnackBarMessage(
+          'Successfully added',
+          MessageType.success, 5000);
+        this.router.navigate([`/${RouteName.home}`]);
       });
   }
 

@@ -15,7 +15,6 @@ export class IndexUsersComponent {
   /**
    * Output for filter search
    */
-
   @Output() sendUserList = new EventEmitter<SingleUser>();
 
   //#endregion
@@ -37,9 +36,8 @@ export class IndexUsersComponent {
    * 
    * @returns void
    */
-
-  public onKeyUp(message: string): void {    
-    this.filterUsers$.next(message);    
+  public onKeyUp(message: string): void {
+    this.filterUsers$.next(message);
   }
 
   //#endregion

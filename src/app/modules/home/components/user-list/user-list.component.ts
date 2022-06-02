@@ -1,17 +1,14 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { filter, first } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { Sort } from '@angular/material/sort';
-import { User } from '@app-models';
-import { AuthService, UserService } from '@app-services';
-import { UpdateUserComponent } from '../update-user/update-user.component';
-import { DeleteUserComponent } from '../delete-user/delete-user.component';
-import { NewUserComponent } from '../new-user/new-user.component';
-import { DeleteAllComponent } from '../delete-all/delete-all.component';
+import { MatSort, Sort } from '@angular/material/sort';
+import { QueryParams, User } from '@app-models';
+import { StorageService, UserService } from '@app-services';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { DeleteAllComponent, DeleteUserComponent, UpdateUserComponent } from '@app-home';
+import { RouteName } from '@app-enums';
 
 @Component({
   selector: 'app-user-list',
@@ -21,10 +18,12 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class UserListComponent implements OnInit, OnChanges {
 
-  //#region Angular stuff (@ViewChild, @Output)
+  //#region Angular stuff (@ViewChild, @Input)
 
   @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
+  paginator: MatPaginator;
+
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   @Input() searchString: string = '';
 
@@ -35,56 +34,51 @@ export class UserListComponent implements OnInit, OnChanges {
   public displayedColumns: string[] = ['check', 'id', 'name', 'email', 'created', 'action'];
   public dataSource: MatTableDataSource<User> = new MatTableDataSource();
   public pageSizeOptions = [2, 5, 7, 10, 100];
-  public length = 0;
-  public pageSize = 10;
+  public allUsersLength = 0;
   public showFirstLastButtons = true;
-  public pageIndex = 0;
-  public lastSearch: string = '';
   public disableDeleteAllButton = true;
-  public orderBy = '';
-  public direction = '';
   private selectedUsers: User[] = [];
   public numOfChecked = 0;
-  public languages: string[] = ['en', 'de'];
-  public language: string = 'en';
+
+  public queryParams: QueryParams = {
+    page: 0,
+    pageSize: 10,
+    search: '',
+    order: '',
+    direction: ''
+  }
 
   //#endregion
 
   constructor(
     private userService: UserService,
     private dialog: MatDialog,
-    private authService: AuthService,
     private router: Router,
-    private translate: TranslateService
-  ) {
-    this.translate.setDefaultLang('en');
-  }
+    private storage: StorageService
+  ) { }
 
   //#region Life cycle hooks
 
   /**
-   * 
-   * This method handle the changes 
+   * This method on init set state of selected users, number of selected users and disableDeleteAllButton
    * 
    * @returns void
    */
-  public ngOnChanges(): void {
-    if (this.lastSearch !== this.searchString) {
-      this.lastSearch = this.searchString;
-      this.pageIndex = 0;
-      this.getUsers();
-    }
+  public ngOnInit(): void {
+    this.selectedUsers = this.storage.selectedUsers;
+    this.numOfChecked = this.selectedUsers.length;
+    this.disableDeleteAllButton = (this.selectedUsers.length === 0) ? true : false;
   }
 
   /**
-   * 
-   * This method on init load users and set pagination.
+   * This method load state and handle the changes 
    * 
    * @returns void
    */
-  ngOnInit(): void {
-    this.getUsers();
-    this.dataSource.paginator = this.paginator;
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes.hasOwnProperty('searchString')) {
+      this.setState();
+    }
   }
 
   //#endregion
@@ -92,51 +86,68 @@ export class UserListComponent implements OnInit, OnChanges {
   //#region Functionality
 
   /**
-   * This method change language
+   * This method set state for query params on load or change detection
+   * Does not send requests for more then one blank spaces.
    * 
    * @returns void
    */
-  public changeLanguage(): void {
-    this.translate.use(this.language);
+  private setState(): void {
+    //does not send a request if there is more then one blank space
+    if (this.queryParams.search !== this.searchString.replace(/\s+/g, ' ') || this.queryParams.search === '') {
+      this.queryParams.page = 0;
+      this.queryParams = this.storage.queryParams ? this.storage.queryParams : this.queryParams;
+
+      //search on load
+      if (this.storage.loadOrNavigateBack === 0) {
+        this.getUsers();
+      } else {
+        //search on navigate back
+        if (this.queryParams.direction !== '') {
+          this.sort.sort({ id: `${this.queryParams.order}`, start: `${this.queryParams.direction}`, disableClear: false });
+          this.storage.loadOrNavigateBack = 0;
+        } else {
+          this.getUsers();
+          this.storage.loadOrNavigateBack = 0;
+        }
+      }
+    }
   }
 
   /**
-   * 
    * Get users from service, set checked, dataSource and pagination properties
    * 
    * @returns void
    */
   private getUsers(): void {
-    this.userService.getUsers(this.pageSize, this.pageIndex, this.searchString, this.orderBy, this.direction)
+    this.queryParams.search = this.searchString.replace(/\s+/g, ' ');
+    this.userService.getUsers(this.queryParams)
       .pipe(first())
       .subscribe((users) => {
         for (let userData of users.data) {
-          userData.checked = this.selectedUsers.find(sel => sel.id === userData.id) != undefined;
+          userData.checked = this.selectedUsers.find(sel => sel.id === userData.id) !== undefined;
         }
+
         this.dataSource.data = users.data;
-        this.length = users.meta.total;
-        this.pageSize = users.meta.per_page;
+        this.allUsersLength = users.meta.total;
+        this.queryParams.pageSize = users.meta.per_page;
       });
   }
 
   /**
-   * 
    * Method change page size or navigates to another page when clicked
-   * 
    * 
    * @param event Change event object that is emitted when the user selects a different page size or navigates to another page.
    * 
    * @returns void
    */
   public handlePageEvent(event: PageEvent): void {
-    this.length = event.length;
-    this.pageSize = event.pageSize;
-    this.pageIndex = event.pageIndex;
+    this.allUsersLength = event.length;
+    this.queryParams.pageSize = event.pageSize;
+    this.queryParams.page = event.pageIndex;
     this.getUsers();
   }
 
   /**
-   * 
    * Get user from service for update
    * 
    * @param id number- user id for update
@@ -152,7 +163,6 @@ export class UserListComponent implements OnInit, OnChanges {
   }
 
   /**
-   * 
    * Open dialog for user update, refresh page after close
    * 
    * @param userId number - user id for update
@@ -166,13 +176,17 @@ export class UserListComponent implements OnInit, OnChanges {
 
     dialogRef.afterClosed()
       .pipe(filter(x => !!x))
-      .subscribe(() => {
+      .subscribe((x) => {
+        const index = this.selectedUsers.findIndex(newItem => newItem.id === userId);
+        if (index !== -1) {
+          this.selectedUsers[index].name = x.name;
+          this.selectedUsers[index].email = x.email;
+        }
         this.getUsers();
       });
   }
 
   /**
-   * 
    * Open dialog for delete, refresh page after close
    * 
    * @param userId number - user id for delete
@@ -190,29 +204,21 @@ export class UserListComponent implements OnInit, OnChanges {
         const index = this.selectedUsers.findIndex(newItem => newItem.id === userId);
         if (index !== -1) {
           this.selectedUsers.splice(index, 1);
+          this.numOfChecked--;
         }
         this.getUsers();
       });
   }
 
   /**
-   * 
-   * Open dialog to add new user, after close refresh page
-   * 
-   * @returns void
+   * This method navigate to add new user component.
    */
   public openAddNewDialog(): void {
-    const dialogRef = this.dialog.open(NewUserComponent, { data: { name: '', email: '' } });
-
-    dialogRef.afterClosed()
-      .pipe(filter(x => !!x))
-      .subscribe(() => {
-        this.getUsers();
-      });
+    this.storage.queryParams = this.queryParams;
+    this.router.navigate([`${RouteName.home}/${RouteName.new}`]);
   }
 
   /**
-   * 
    * Sort users on header click
    * 
    * @param sort Sort - active (true, false) and direction (asc, desc)
@@ -220,16 +226,15 @@ export class UserListComponent implements OnInit, OnChanges {
    * @returns void
    */
   public sortData(sort: Sort): void {
-    this.direction = sort.direction;
-    this.orderBy = sort.active;
+    this.queryParams.direction = sort.direction;
+    this.queryParams.order = sort.active;
     if (!sort.active || sort.direction === '') {
-      this.orderBy = '';
+      this.queryParams.order = '';
     }
     this.getUsers();
   }
 
   /**
-   * 
    * Open dialog for delete all checked users, after close refresh page
    * 
    * @returns void
@@ -244,12 +249,12 @@ export class UserListComponent implements OnInit, OnChanges {
         this.disableDeleteAllButton = true;
         this.numOfChecked = 0;
         this.selectedUsers = [];
+        this.storage.selectedUsers = [];
         this.getUsers();
       });
   }
 
   /**
-   * 
    * Make array of checked users and set disable property for Delete All button
    * 
    * @param user IUser - checked user
@@ -262,18 +267,14 @@ export class UserListComponent implements OnInit, OnChanges {
     if (index === -1 && event.checked) {
       user.checked = event.checked;
       this.selectedUsers.push(user);
-    } else if (index !== -1 && !event.checked)  {      
+    } else if (index !== -1 && !event.checked) {
       user.checked = event.checked;
       this.selectedUsers.splice(index, 1);
     }
     this.disableDeleteAllButton = (this.selectedUsers.length === 0) ? true : false;
     this.numOfChecked = this.selectedUsers.length;
+    this.storage.selectedUsers = this.selectedUsers;
   }
 
   //#endregion
-
-  public onLogout() {
-    this.authService.logout();
-    this.router.navigate(['login']);
-  }
 }

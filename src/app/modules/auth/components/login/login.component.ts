@@ -3,7 +3,8 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService, FormsService } from '@app-services';
 import { filter } from 'rxjs';
-import { LoginRequest } from 'src/app/shared/models';
+import { LoginRequest } from '@app-models';
+import { RouteName } from '@app-enums';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ export class LoginComponent implements OnInit {
 
   //#region Class properties
 
-  public loginForm: FormGroup = {} as FormGroup;
+  public loginForm: FormGroup;
 
   //#endregion
 
@@ -25,9 +26,15 @@ export class LoginComponent implements OnInit {
     private formsService: FormsService
   ) { }
 
+  //#region Life cycle hooks
+
   ngOnInit(): void {
     this.loginForm = this.formsService.getLoginForm();
   }
+
+  //#endregion
+
+  //#region UI response
 
   /**
    * Save value from remember me checkbox
@@ -39,10 +46,7 @@ export class LoginComponent implements OnInit {
     this.loginForm.patchValue({
       check: currentValue
     });
-
   }
-
-  //#region UI response
 
   /**
    * This method check userEmail and password and log in on home page
@@ -53,12 +57,11 @@ export class LoginComponent implements OnInit {
    */
   onClickSubmit(loginFormValue: LoginRequest): void {
     this.authService.login(
-      loginFormValue.userEmail,
-      loginFormValue.password,
-      loginFormValue.check)
+      loginFormValue
+    )
       .pipe(filter(x => !!x))
       .subscribe(() => {
-        this.router.navigate(['/home']);
+        this.router.navigate([`/${RouteName.home}`]);
       });
   }
 

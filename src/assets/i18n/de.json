@@ -40,7 +40,9 @@
         "PaginatorPerItem" : "Items per page de",
         "UserUpdated": "Der Userund updaten sie hast.",
         "UserDeleted": "Der Userund deleten sie hast.",
-        "DeleteAllDeleted" : "Deleted de"
+        "DeleteAllDeleted" : "Deleted de",
+        "Back" : "Back de",
+        "AppName" : "CRUD Angular de"
     },
     "Auth":{
         "EmailRequired" : "Email Required de",

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { StorageService } from '@app-services';
 
 @Component({
   selector: 'app-filter-user',
@@ -6,7 +7,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angul
   styleUrls: ['./filter-user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FilterUserComponent {
+export class FilterUserComponent implements OnInit {
 
   //#region Angular stuff (@Output)
 
@@ -20,7 +21,15 @@ export class FilterUserComponent {
 
   //#endregion
 
-  constructor() { }
+  constructor(private storage: StorageService) {
+    if (this.storage.queryParams !== undefined) {
+      this.searchData = this.storage.queryParams.search;
+    }
+  }
+
+  ngOnInit(): void {
+    this.search.emit(this.searchData);
+  }
 
   //#region UI response
 
@@ -29,7 +38,6 @@ export class FilterUserComponent {
    * 
    * @returns void
    */
-
   public filterUsers(): void {
     this.search.emit(this.searchData);
   }
@@ -39,7 +47,6 @@ export class FilterUserComponent {
    * 
    * @returns void
    */
-
   public clearSearch(): void {
     this.searchData = '';
     this.search.emit(this.searchData);

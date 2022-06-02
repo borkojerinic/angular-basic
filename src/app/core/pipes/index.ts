@@ -1,0 +1,1 @@
+export * from './custom-medium-date-format.pipe';

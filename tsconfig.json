@@ -2,6 +2,35 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "@app-models":[
+        "src/app/shared/models/"
+      ],
+      "@app-services":[
+        "src/app/core/services/"
+      ],
+      "@app-interceptors":[
+        "src/app/core/interceptors/"
+      ],
+      "@app-home":[
+        "src/app/modules/home/"
+      ],
+      "@app-components":[
+        "src/app/shared/components/"
+      ],
+      "@app-enums":[
+        "src/app/shared/enums/"
+      ],
+      "@app-auth":[
+        "src/app/modules/auth/"
+      ],
+      "@app-guards":[
+        "src/app/core/guards/"
+      ],
+      "@app-pipes":[
+        "src/app/core/pipes/"
+      ]
+    },
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
@@ -21,7 +50,8 @@
     "lib": [
       "es2020",
       "dom"
-    ]
+    ],
+    "strictPropertyInitialization": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

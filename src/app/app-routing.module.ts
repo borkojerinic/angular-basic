@@ -1,10 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { IndexUsersComponent } from './users/index-users/index-users.component';
+import { RouteName } from '@app-enums';
+import { UserNotAuthorizedGuard } from './core/guards';
 
 const routes: Routes = [
   {
-    path: '', component: IndexUsersComponent
+    path: RouteName.home,
+    loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule),
+    canActivate: [UserNotAuthorizedGuard]
+  },
+  {
+    path: RouteName.default, redirectTo: RouteName.home, pathMatch: 'full'
   }
 ];
 

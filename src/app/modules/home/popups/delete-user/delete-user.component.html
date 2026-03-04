@@ -1,0 +1,6 @@
+<h1 mat-dialog-title>{{'Home.DeleteDialogTitle' | translate}}</h1>
+<div mat-dialog-content>{{'Home.DeleteDialogContent' | translate}} {{ data.name }}</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">{{'Home.DeleteClose' | translate}}</button>
+  <button mat-button (click)="onDelete()">{{'Home.DeleteDelete' | translate}}</button>
+</div>

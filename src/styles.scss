@@ -37,3 +37,26 @@ $crudAngular-theme: mat.define-light-theme((
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.success-notification {
+  background: green !important;
+  .mat-simple-snackbar-action > button {
+      color: #ffffff;
+  }
+  color: #ffffff;
+}
+
+.warning-notification {
+  background: orange !important;
+  color: #000000;
+  .mat-simple-snackbar-action > button {
+      color: #000000;
+  }
+}
+
+.error-notification {
+  background: red !important;
+  color: #ffffff;
+  .mat-simple-snackbar-action > button {
+      color: #ffffff;
+  }
+}

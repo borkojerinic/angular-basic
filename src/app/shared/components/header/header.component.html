@@ -1,0 +1,14 @@
+<mat-toolbar>
+  <span>{{'Home.AppName' | translate}}</span>
+  <span class="example-spacer"></span>
+  <span>
+    <mat-select [(ngModel)]="language" (selectionChange)="changeLanguage()">
+      <mat-option *ngFor="let language of languages" [value]="language">
+        {{ language }}
+      </mat-option>
+    </mat-select>
+  </span>
+  <button mat-button (click)="logout()" *ngIf="userIsAuthenticated === true">
+    {{'Home.Logout' | translate}}
+  </button>
+</mat-toolbar>

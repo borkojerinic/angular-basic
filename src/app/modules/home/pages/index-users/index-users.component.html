@@ -1,0 +1,11 @@
+<div class="main-wrapper">
+  <div class="filter-wrapper">
+    <app-filter-user (search)="onKeyUp($event)"></app-filter-user>
+  </div>
+
+  <div class="table-wrapper">
+    <app-user-list
+      [searchString]="'' + (filterUsers$ | async)"
+    ></app-user-list>
+  </div>
+</div>
